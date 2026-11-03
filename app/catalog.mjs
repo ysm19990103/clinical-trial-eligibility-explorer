@@ -1,5 +1,5 @@
 export const VERSION='1.0.1';
-export const RULESET='eligibility-selected-2026-11-03';
+export const RULESET='eligibility-selected-2026-11-03-r2';
 export const LIMITS=Object.freeze({bytes:2097152,depth:40,nodes:100000,string:131072,studies:20,criteria:60,ruleDepth:8,ruleNodes:200,sourceText:20000});
 const options=items=>items.map(([value,label])=>({value,label}));
 const number=(label,group,unit,min,max,help='',step='any')=>({label,group,kind:'number',unit,min,max,help,step});
@@ -13,7 +13,7 @@ export const FIELDS=Object.freeze({
  stage:enumeration('Protocol stage grouping','Disease context',[['stage_iv','Stage IV'],['locally_advanced','Locally advanced'],['ib_ii_iiia_tnm7','Postoperative pathologic IB / II / IIIA (TNM 7)'],['other','Other grouping']],'Do not translate between TNM editions automatically. Select only a confirmed grouping.'),
  curativeLocalTherapy:bool('Suitable for curative surgery or radiotherapy','Disease context','A protocol-specific clinical judgment; uncertainty stays unknown.'),
  resected:bool('Complete R0 resection documented','Disease context','This does not establish required timing, recovery or all staging criteria.'),
- measurable:bool('Measurable disease documented','Disease context','Protocol-specific measurement requirements still require source review.'),
+ measurable:bool('Measurable disease documented','Disease context','Yes means documented measurable disease; No means documented absence, not missing assessment. Leave unassessed evidence unknown. Protocol-specific measurement requirements still require source review.'),
  ecog:number('ECOG performance status','Performance & biomarkers','ECOG',0,5,'Enter an ECOG assessment only.',1),
  whops:number('WHO performance status','Performance & biomarkers','WHO PS',0,5,'Kept separate from ECOG; stability and investigator review remain manual.',1),
  egfr:enumeration('EGFR mutation finding','Performance & biomarkers',[['exon19del','Exon 19 deletion present (alone or with other variants)'],['l858r','L858R present (alone or with other variants)'],['other','Confirmed neither exon 19 deletion nor L858R'],['not_detected','Not detected']],'Assay method, central confirmation and trial-specific interpretation are separate requirements.'),

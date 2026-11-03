@@ -2,7 +2,7 @@
 
 A browser-local workspace for comparing synthetic cases with selected clinical-trial criteria. Each criterion produces **meets**, **does not meet**, or **unknown**, with a visible explanation of the rule and the evidence still needed.
 
-**[Open the demo](https://ysm19990103.github.io/clinical-trial-eligibility-explorer/)** · [Methodology](docs/methodology.md) · [JSON formats](docs/formats.md) · [Architecture](docs/architecture.md) · [Security and privacy](SECURITY.md) · [Quality review](docs/quality-review.md)
+**[Open the demo](https://ysm19990103.github.io/clinical-trial-eligibility-explorer/)** · [Methodology](docs/methodology.md) · [JSON formats](docs/formats.md) · [Architecture](docs/architecture.md) · [Security and privacy](SECURITY.md) · [Quality review](docs/quality-review.md) · [FLAURA mapping audit](docs/flaura-mapping-audit.md)
 
 This is an educational portfolio project. It does not determine eligibility, recommend treatment, or enroll participants. The public examples are historical teaching comparisons; a study's recruitment status is separate from its criteria results. Use synthetic cases only.
 
@@ -67,7 +67,7 @@ These controls reduce exposure; they do not certify de-identification. The case 
 
 ## Engineering evidence
 
-The project separates bounded parsing, schema validation, three-state evaluation, registry adaptation, reporting, and presentation. The 88 automated tests cover rule truth tables, exclusion polarity, uncertainty propagation, numerical and date boundaries, malformed inputs, source handling, and output privacy canaries. Public criteria are traceable to sources and kept distinct from fictional demonstration rules.
+The project separates bounded parsing, schema validation, three-state evaluation, registry adaptation, reporting, and presentation. The 101 automated tests cover rule truth tables, exclusion polarity, uncertainty propagation, numerical and date boundaries, malformed inputs, source handling, and output privacy canaries, including 13 regressions for the FLAURA refinement and related-template boundaries. Public criteria are traceable to sources and kept distinct from fictional demonstration rules.
 
 These choices make the project useful for demonstrating clinical research literacy, healthcare data modeling, defensive input handling, and explainable software behavior.
 
