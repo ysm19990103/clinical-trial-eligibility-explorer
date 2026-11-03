@@ -9,6 +9,9 @@ const rest=()=>inc('remaining-protocol','Remaining protocol requirements',manual
 const age=()=>cmp('age','gte',18,'years');
 const nonSquamous=()=>all(cmp('disease','eq','nsclc'),cmp('histology','in',['adenocarcinoma','nonsquamous']));
 const egfr=()=>any(cmp('egfr','eq','exon19del'),cmp('egfr','eq','l858r'));
+// D5160C00007 edition 4.0, 7 March 2018, section 3.1(9), printed p. 38.
+// The current registry summary omits this clause; see docs/flaura-mapping-audit.md.
+const flauraImagingSource='https://cdn.clinicaltrials.gov/large-docs/25/NCT02296125/Prot_000.pdf#page=39';
 export const STUDIES=[
  {id:'NCT02578680',shortTitle:'KEYNOTE-189',title:'Pembrolizumab plus chemotherapy in untreated metastatic nonsquamous NSCLC',condition:'Metastatic nonsquamous NSCLC',phase:'Phase 3',status:'Completed · historical example',sourceDate:'2024-09-20',reviewedOn:'2026-11-03',sourceUrl:'https://clinicaltrials.gov/study/NCT02578680',provenance:'public-curated',coverageNote:'Selected registry clauses, paraphrased. Source date is the registry last-update date. This study is a historical teaching example; no enrollment recommendation is made.',criteria:[
  inc('adult','Age at least 18 years',age()),
@@ -19,10 +22,12 @@ export const STUDIES=[
  inc('performance','ECOG performance status 0–1',cmp('ecog','in',[0,1],'ECOG')),
  inc('exceptions','CNS, autoimmune and immunosuppression provisions',manual('Conditional exclusions and exceptions require full source review.'),'A single diagnosis or boolean cannot capture the complete exclusions and their qualifiers.'),rest()
  ]},
- {id:'NCT02296125',shortTitle:'FLAURA',title:'First-line osimertinib versus earlier EGFR inhibitors in advanced NSCLC',condition:'EGFR-mutated advanced NSCLC',phase:'Phase 3',status:'Completed · historical example',sourceDate:'2026-04-21',reviewedOn:'2026-11-03',sourceUrl:'https://clinicaltrials.gov/study/NCT02296125',provenance:'public-curated',coverageNote:'Selected registry clauses, paraphrased. Source date is the registry last-update date. WHO performance status is not automatically substituted with ECOG.',criteria:[
+ {id:'NCT02296125',shortTitle:'FLAURA',title:'First-line osimertinib versus earlier EGFR inhibitors in advanced NSCLC',condition:'EGFR-mutated advanced NSCLC',phase:'Phase 3',status:'Completed · historical example',sourceDate:'2026-04-21',reviewedOn:'2026-11-03',sourceUrl:'https://clinicaltrials.gov/study/NCT02296125',provenance:'public-curated',coverageNote:'Selected registry clauses plus protocol edition 4.0 (2018-03-07) measurable-disease requirements. Source date is the registry last-update date. Documented measurability is only a selected prerequisite; imaging qualifications remain manual. WHO performance status is not automatically substituted with ECOG.',criteria:[
  inc('age-range','Registry age range 18–100 years',all(age(),cmp('age','lte',100,'years')),'Registry demographic bounds only; applicable protocol qualifications remain unassessed.'),
  inc('population','Advanced lung adenocarcinoma without curative local treatment',all(cmp('disease','eq','nsclc'),cmp('histology','eq','adenocarcinoma'),cmp('stage','in',['stage_iv','locally_advanced']),cmp('curativeLocalTherapy','eq',false))),
  inc('egfr','EGFR exon 19 deletion or L858R',egfr(),'Assay eligibility and other mutation combinations need protocol review.'),
+ {...inc('measurable','Measurable disease documented (selected check)',cmp('measurable','eq',true),'Checks the supplied measurable-disease fact only. It does not establish RECIST v1.1 compliance or satisfy the full FLAURA imaging requirement; the companion qualification review remains unknown.'),sourceUrl:flauraImagingSource},
+ {...inc('measurable-qualifications','FLAURA lesion and imaging qualifications',manual('Protocol-specific lesion selection, measurements and imaging timing require human review.'),'Protocol 4.0, section 3.1(9), Appendix C2: CT/MRI lesion >=10 mm longest diameter (nodes >=15 mm short axis), repeatably measurable and not previously irradiated. Normally exclude screening-biopsy targets; a sole measurable lesion may be used if not irradiated and baseline scans occur >=14 days after screening biopsy. Size, imaging, biopsy and timing are not inferred from the boolean.'),sourceUrl:flauraImagingSource},
  inc('untreated','No systemic treatment for advanced/metastatic disease',cmp('priorSystemic','eq',false),'Prior adjuvant or neoadjuvant treatment is not automatically disqualifying.'),
  inc('performance','WHO performance status 0–1',cmp('whops','in',[0,1],'WHO PS')),
  inc('performance-stability','Performance stability during the previous two weeks',manual('The required stability interval is not represented by a single performance score.')),
