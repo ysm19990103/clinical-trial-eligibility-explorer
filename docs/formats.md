@@ -32,6 +32,8 @@ An omitted fact and an explicit `null` value both mean unknown. Boolean `false` 
 
 ### Numeric fields and exact units
 
+JSON numbers and editor decimals share the same finite, 15-significant-mantissa-digit limit. Overprecision, overflow, and nonzero underflow are rejected before evaluation. An absent unit stays absent when a case is edited; expected-unit placeholders are hints, not evidence.
+
 Case values must be finite and within these software bounds. Integer fields cannot contain fractional values. These bounds limit supported input; they do not define clinically plausible values or trial eligibility.
 
 | Field key | Meaning | Exact unit | Range | Integer only |

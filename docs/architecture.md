@@ -19,7 +19,8 @@ No processing step calls a remote model, terminology service, registry API, or c
 | `app/catalog.mjs` | Field definitions, value domains, fixed source links, version, and input limits |
 | `app/examples.mjs` | Fresh synthetic case fixtures for documented, incomplete, conflicting, and stale-evidence scenarios |
 | `app/trials.mjs` | Selected public-study mappings and the fictional laboratory protocol |
-| `app/parser.mjs` | Bounded JSON parsing and strict case/study-pack validation |
+| `app/parser.mjs` | Bounded JSON parsing, shared decimal-text validation, and strict case/study-pack validation |
+| `app/case-editor.mjs` | Validate original form text before committing a synthetic case, preserving missing units |
 | `app/registry.mjs` | Conservative projection of ClinicalTrials.gov API v2 JSON into the local study model |
 | `app/engine.mjs` | Three-state predicate evaluation, evidence checks, criterion polarity, and study summaries |
 | `app/exports.mjs` | Reduced JSON, CSV, and standalone HTML reports |

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseInput,validateCase,validateStudyPack,ImportError} from '../app/parser.mjs';
+import {parseInput,parseNumberLiteral,validateCase,validateStudyPack,ImportError} from '../app/parser.mjs';
 import {FIELDS,LIMITS} from '../app/catalog.mjs';
 const asOf='2026-11-03';
 const sampleCase=()=>({schema:'eligibility-case.v1',asOf,facts:{age:{value:55,unit:FIELDS.age.unit},activeCns:{value:false}}});
@@ -22,6 +22,15 @@ test('invalid JSON, non-object roots and trailing content are rejected',()=>{
 test('unsafe numeric precision, overflow and nonzero underflow are rejected before evaluation',()=>{
   for(const number of ['1234567890123456','1.234567890123456','1e999','1e-999'])rejects(()=>parseInput(`{"a":${number}}`));
   assert.equal(parseInput('{"a":123456789012345,"b":0.5,"c":-0}').a,123456789012345);
+});
+test('decimal reader supports editor notation without weakening JSON number syntax',()=>{
+  for(const [text,value] of [['.5',.5],['1.',1],['01',1],['+1',1],['1.5e1',15],['-0',-0]])assert.equal(parseNumberLiteral(text),value);
+  for(const text of ['.5','1.','01','+1'])rejects(()=>parseInput(`{"a":${text}}`));
+});
+test('decimal reader rejects nondecimal text and retains fixed error messages',()=>{
+  for(const text of ['', ' ', '0x10','1 2','Infinity','NaN','SYNTHETIC-NUMBER-CANARY','1e-999','1.49999999999999999']){
+    assert.throws(()=>parseNumberLiteral(text),error=>error instanceof ImportError&&error.code==='precision'&&!error.message.includes('SYNTHETIC-NUMBER-CANARY'));
+  }
 });
 test('JSON byte, string, node and nesting limits are enforced',()=>{
   rejects(()=>parseInput(' '.repeat(LIMITS.bytes+1)+'{}'));

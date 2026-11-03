@@ -103,3 +103,7 @@ export function evaluateAll(studies,caseData){
   if(!Array.isArray(studies)||studies.length>(LIMITS.studies||20))return [evaluateStudy(null,caseData)];
   return studies.map((study,index)=>({...evaluateStudy(study,caseData),alias:`T${String(index+1).padStart(3,'0')}`}));
 }
+export function countManualCriteria(criteria){
+  const hasManual=(node,depth=0)=>Boolean(node&&depth<=LIMITS.ruleDepth&&(node.op==='manual'||(node.children||[]).some(child=>hasManual(child,depth+1))));
+  return criteria.filter(criterion=>hasManual(criterion.tree)).length;
+}

@@ -1,4 +1,4 @@
-export const VERSION='1.0.0';
+export const VERSION='1.0.1';
 export const RULESET='eligibility-selected-2026-11-03';
 export const LIMITS=Object.freeze({bytes:2097152,depth:40,nodes:100000,string:131072,studies:20,criteria:60,ruleDepth:8,ruleNodes:200,sourceText:20000});
 const options=items=>items.map(([value,label])=>({value,label}));

@@ -40,6 +40,8 @@ ECOG and WHO performance status are separate fields. Prior systemic treatment fo
 
 The laboratory sandbox uses fictional thresholds and windows to demonstrate these mechanisms. They are not substituted for the organ-function requirements of any public trial.
 
+The comparison table counts each criterion containing a manual rule once, including manual nodes nested in AND, OR, or NOT groups. This count describes review coverage, not the number of unknown results; a group can have a known outcome while still containing an unassessed branch.
+
 ## Public teaching studies
 
 Mappings were reviewed on **November 3, 2026**. The public examples are selected historical comparisons, not a live recruitment search. Each retains an unknown requirement for the unmodeled protocol and its qualifications.

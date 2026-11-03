@@ -2,6 +2,14 @@ import { LIMITS, FIELDS } from './catalog.mjs';
 export class ImportError extends Error {
   constructor(code,message,offset=null){super(message);this.name='ImportError';this.code=code;this.offset=offset;}
 }
+// Validate decimal text before Number can round a threshold crossing or underflow.
+// JSON tokenization remains stricter; the editor also accepts forms such as .5.
+export function parseNumberLiteral(literal,offset=null){
+  if(typeof literal!=='string'||! /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(literal))throw new ImportError('precision','Enter a supported finite decimal number.',offset);
+  const number=Number(literal),mantissa=literal.split(/[eE]/)[0].replace(/[+\-.]/g,'').replace(/^0+/,'');
+  if(mantissa.length>15||!Number.isFinite(number)||(number===0&&/[1-9]/.test(mantissa)))throw new ImportError('precision','Number exceeds the supported finite, 15-significant-digit precision limit.',offset);
+  return number;
+}
 // A bounded JSON reader detects duplicate decoded keys before they can be overwritten.
 // Errors contain positions and fixed messages, never input excerpts or filenames.
 export function parseInput(text) {
@@ -31,10 +39,7 @@ export function parseInput(text) {
     if(ch==='['){i++;space();const out=[];if(text[i]===']'){i++;return out;}while(i<text.length){out.push(value(depth+1));space();const end=text[i++];if(end===']')return out;if(end!==',')fail('syntax','Expected an array separator.');}fail('syntax','Unterminated JSON array.');}
     for(const [token,result] of [['true',true],['false',false],['null',null]])if(text.startsWith(token,i)){i+=token.length;return result;}
     const match=text.slice(i).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);
-    if(match){const literal=match[0];i+=literal.length;const number=Number(literal);const mantissa=literal.split(/[eE]/)[0].replace(/[-.]/g,'').replace(/^0+/,'');
-      if(mantissa.length>15||!Number.isFinite(number)||(number===0&&/[1-9]/.test(mantissa)))fail('precision','Number exceeds the supported finite, 15-significant-digit precision limit.');
-      return number;
-    }
+    if(match){const literal=match[0];i+=literal.length;return parseNumberLiteral(literal,i);}
     fail('syntax','Invalid JSON value.');
   }
   const data=value(0);space();if(i!==text.length)fail('syntax','Unexpected content after the JSON value.');

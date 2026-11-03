@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {evaluateStudy,evaluateAll} from '../app/engine.mjs';
+import {evaluateStudy,evaluateAll,countManualCriteria} from '../app/engine.mjs';
 import {FIELDS} from '../app/catalog.mjs';
+import {STUDIES} from '../app/trials.mjs';
 
 const asOf='2026-11-03';
 const fact=(value,extra={})=>({value,...extra});
@@ -12,6 +13,14 @@ const study=(rules,kinds=[])=>({id:'DEMO-TEST',title:'Synthetic test protocol',s
 const criterion=(rule,facts={},kind='inclusion',date=asOf)=>evaluateStudy(study([rule],[kind]),clinicalCase(facts,date)).criteria[0];
 const truthRules={true:compare('age',18,'gte',{unit:FIELDS.age.unit}),false:compare('age',99,'gte',{unit:FIELDS.age.unit}),unknown:bool(true)};
 const knownAge={age:fact(45,{unit:FIELDS.age.unit})};
+
+test('manual review counts include compound criteria once, including all four ADAURA criteria',()=>{
+  const manual={op:'manual'};
+  const result=evaluateStudy(study([manual,{op:'all',children:[truthRules.true,manual,manual]},{op:'not',child:manual},{op:'any',children:[truthRules.true,manual]},truthRules.true]),clinicalCase(knownAge));
+  assert.equal(countManualCriteria(result.criteria),4);
+  const adaura=evaluateStudy(STUDIES.find(s=>s.id==='NCT02511106'),clinicalCase());
+  assert.equal(countManualCriteria(adaura.criteria),4);
+});
 
 test('AND evaluates all nine three-valued combinations without short-circuiting explanations',()=>{
   const expected={true:{true:'true',false:'false',unknown:'unknown'},false:{true:'false',false:'false',unknown:'false'},unknown:{true:'unknown',false:'false',unknown:'unknown'}};
